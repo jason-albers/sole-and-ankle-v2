@@ -31,15 +31,23 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default';
 
-  const FLAGCOLOR =
+  const flagColor =
     variant === 'on-sale' ? COLORS.primary : COLORS.secondary;
+
+  const textDecoration =
+    variant === 'on-sale' ? 'line-through' : 'none';
 
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
           {variant !== 'default' && (
-            <Flag style={{ '--background-color': FLAGCOLOR }}>
+            <Flag
+              style={{
+                '--background-color': flagColor,
+                '--color': COLORS.primary,
+              }}
+            >
               {(variant === 'on-sale' && 'Sale') ||
                 (variant === 'new-release' && 'Just released!')}
             </Flag>
@@ -49,10 +57,17 @@ const ShoeCard = ({
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price style={{ '--text-decoration': textDecoration }}>
+            {formatPrice(price)}
+          </Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {variant === 'on-sale' && (
+            <Price style={{ '--color': COLORS.primary }}>
+              {formatPrice(salePrice)}
+            </Price>
+          )}
         </Row>
       </Wrapper>
     </Link>
@@ -81,6 +96,8 @@ const Image = styled.img`
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -88,7 +105,10 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  text-decoration-line: var(--text-decoration);
+  color: var(--color);
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
